@@ -3,7 +3,7 @@
 import rrdtool
 import os
 
-### x is the amount of data points per package to take the average from ###
+#--- x is the amount of data points per package to take the average from ---#
 x = 5
 deel = 5.
 inactive_packages = 0
@@ -13,7 +13,7 @@ tot_cpu_sec = 0
 for files in os.walk(r'/home/aboukema/rp2/data/packages'):
  print "\nNumber of files in the directory = %i " %len(files[2])
 
- ###for each package in the package directory compute the average cpu seconds ###
+ #--- for each package in the package directory compute the average cpu seconds ---#
  for filename in files[2]:
   filename = str(filename)
 
@@ -25,7 +25,7 @@ for files in os.walk(r'/home/aboukema/rp2/data/packages'):
 	 '--start', '1484652900',
 	 '--end', '1484658900')
 
-   ###the cpu seconds are stored at index i###
+   #--- the cpu seconds are stored at index i ---#
    if isinstance(info[2][2][1], float):
     for i in range(x):
      total += info[2][i][1]
@@ -43,7 +43,7 @@ for files in os.walk(r'/home/aboukema/rp2/data/packages'):
 
 print "Number of empty host packages = %i" %inactive_packages
 
-### there are 12 harware devices which have 2x8 CPU cores ###
+#--- there are 12 harware devices which have 2x8 CPU cores ---#
 max_cpu = 60 * 5 * 12 * 16
 print "max CPU seconds available = %i \n" %max_cpu
 
