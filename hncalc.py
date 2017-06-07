@@ -9,6 +9,7 @@ inactive_hns = 0
 active_hns = 0
 tot_cpu_sec = 0
 tot_hns = 0
+print "All files with an average of CPU seconds above a second:"
 
 for files in os.walk(r'/home/aboukema/rp2/data/machines'):
  #print "\nNumber of files in the directory = %i " %len(files[2])
@@ -48,7 +49,7 @@ print "Number of empty host packages = %i" %inactive_hns
 max_cpu_sec = 60 * 5 * 12 * 16
 print "max CPU seconds available = %i \n" %max_cpu_sec
 
-print "All %d active hosting nodes  used %f seconds of CPU" %(active_hns, tot_cpu_sec)
+print "All %d active hosting nodes used %f seconds of CPU" %(active_hns, tot_cpu_sec)
 
 total_used = tot_cpu_sec/max_cpu_sec*100
 print "Which is %f%% of total available CPU seconds \n" %total_used

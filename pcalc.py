@@ -9,9 +9,10 @@ deel = 5.
 inactive_packages = 0
 active_packages = 0
 tot_cpu_sec = 0
+print "\n" + "All files with an average of CPU seconds above a second:"
 
 for files in os.walk(r'/home/aboukema/rp2/data/packages'):
- print "\nNumber of files in the directory = %i " %len(files[2])
+ #print "\nNumber of files in the directory = %i " %len(files[2])
 
  #--- for each package in the package directory compute the average cpu seconds ---#
  for filename in files[2]:
