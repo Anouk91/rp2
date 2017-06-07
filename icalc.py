@@ -18,7 +18,7 @@ for files in os.walk(r'/home/aboukema/rp2/data/machines'):
  for filename in files[2]:
   filename = str(filename)
 
-  if filename.startswith('hn') and filename.endswith('cpu.rrd'):
+  if filename.startswith('i') and filename.endswith('cpu.rrd'):
    tot_hns += 1
    total = 0
    info = rrdtool.fetch('/home/aboukema/rp2/data/machines/%s' % filename,
