@@ -3,15 +3,19 @@
 import numpy as np
 import os
 from numpy import arange,array,ones,linalg
-from pylab import plot,show
+import matplotlib.pyplot as plt
 
 
 hn_i, hw =np.loadtxt('hn_i.out')
 
-xi = arange(0,len(hw)-1)
-w = linalg.lstsq(hn_i.T,hw)[0] # obtaining the parameters
+A = np.vstack([hn_i, np.ones(len(hn_i))]).T
+print A
 
-# plotting the line
-line = w[0]*xi+w[1] # regression line
-plot(xi,line,'r-',xi,hw,'o')
-show()
+
+m, c = np.linalg.lstsq(A, hw)[0]
+
+print(m, c)
+plt.plot(hn_i, hw, 'o', label='Original data', markersize=10)
+plt.plot(hn_i, m*hn_i + c, 'r', label='Fitted line')
+plt.legend()
+plt.show()
