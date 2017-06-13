@@ -15,7 +15,9 @@ print A
 m, c = np.linalg.lstsq(A, hw)[0]
 
 print(m, c)
-plt.plot(hn_i, hw, 'o', label='Original data', markersize=10)
-plt.plot(hn_i, m*hn_i + c, 'r', label='Fitted line')
+#plt.plot(hw, label='Watt')
+plt.plot(hn_i, hw, 'o')
+#plt.plot(hn_i, hw, 'o', label='Original data', markersize=10)
+#plt.plot(hn_i, m*hn_i + c, 'r', label='Fitted line')
 plt.legend()
 plt.show()
