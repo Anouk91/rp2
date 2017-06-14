@@ -8,7 +8,7 @@ from pylab import plot,show
 from scipy import stats
 
 
-hn_i, hw =np.loadtxt('6days')
+hn_i, hw =np.loadtxt('data6days')
 hn_itterate = list(hn_i)
 hn_vps = list(hn_i)
 hw = list(hw)
