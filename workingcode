@@ -67,4 +67,4 @@ print len(hn_vps)
 print(tot)
 
 #print empty_hn_i,empty_hw, "tot =", tot
-np.savetxt('newdata', (hn_vps, hw))
+np.savetxt('data6days', (hn_vps, hw))
