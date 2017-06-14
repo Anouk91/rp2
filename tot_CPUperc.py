@@ -9,6 +9,9 @@ inactive_hns = 0
 active_hns = 0
 tot_cpu_sec = 0
 tot_hns = 0
+t1 = '1496872800'  #2017-06-13 12:00   
+t2 = '1497348000'  #2017-06-13 12:00 
+
 print "All files with an average of CPU seconds above a second:"
 
 for files in os.walk(r'/home/aboukema/rp2/data/machines'):
@@ -24,8 +27,8 @@ for files in os.walk(r'/home/aboukema/rp2/data/machines'):
    info = rrdtool.fetch('/home/aboukema/rp2/data/machines/%s' % filename,
 	'AVERAGE',
 	 '-r', '1',
-	 '--start', '1495550400',
-	 '--end', '1495558200')
+	 '--start', t1,
+	 '--end', t2)
 
    #--- the cpu seconds are stored at index i ---#
    if isinstance(info[2][2][0], float): #--- make sure to only use non-empty data ---#
