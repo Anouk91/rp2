@@ -29,7 +29,7 @@ def read_rrd(key):
     print file_list
     for filename in file_list:
         file = rrdtool.fetch('/home/aboukema/rp2/hardware_nodes/%s' % filename, 'AVERAGE',
-        '-r', '1', '--start', t1, '--end', t2)
+        '-r', '5', '--start', t1, '--end', t2)
         print filename
         if a == 0:
             print "length of file = ", len(file[2])
@@ -67,6 +67,7 @@ print cpu, empty_cpu, tot
 print mem, empty_mem
 print watt
 
+os.chdir('/home/aboukema/rp2/data/git')
 
 
 #print empty_hn_i,empty_hw, "tot =", tot
