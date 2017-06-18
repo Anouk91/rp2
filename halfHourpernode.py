@@ -40,7 +40,8 @@ def read_rrd(key, interval):
         b = init_list(len(file[2]))     
         a, b = sum_lists(file, a, b)
         name = ""+ re.search('\d{3}', filename).group()+"_"+ key
-        save(a,  name)
+        half = make_half(a, interval)
+        save(half,  name)
         tot += 1
         #print "\n empty indexes", filename,  b
 
