@@ -30,13 +30,17 @@ def read_rrd(key, interval):
         file = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
                 '-r', '6m', '--start', t1, '--end', t2)
        #   qq print filename
-        if a == 0:
-            #print "length of file = ", len(file[2])
-            a = init_list(len(file[2]))
-            b = init_list(len(file[2]))
-            empty = 1
-             
+  #      if a == 0:
+   #         #print "length of file = ", len(file[2])
+    #        a = init_list(len(file[2]))
+     #       b = init_list(len(file[2]))
+      #      empty = 1
+        a = init_list(len(file[2]))     
+
+        b = init_list(len(file[2]))     
         a, b = sum_lists(file, a, b)
+        name = ""+ re.search('\d{3}', filename).group()+"_"+ key
+        save(a,  name)
         tot += 1
         #print "\n empty indexes", filename,  b
 
@@ -44,6 +48,10 @@ def read_rrd(key, interval):
     print half
     return half, b
 
+def save(x, i):
+    os.chdir('/home/aboukema/rp2/data/git/data')
+    np.save(i,(x))
+    
 
 def make_half(a, interval):
     length = len(a)/interval +1
@@ -81,9 +89,9 @@ def sum_lists1(a, b):
     return l 
 
 
-cpu, empty_cpu = read_rrd('*302_lan_cpu_user*',5)
-mem, empty_mem = read_rrd('*302_lan_mem_free*',5)
-watt, empty_watt = read_rrd('hw_302*',6)
+cpu, empty_cpu = read_rrd('*cpu_user*',5)
+mem, empty_mem = read_rrd('*mem_free*',5)
+watt, empty_watt = read_rrd('hw*',6)
 #print cpu, empty_cpu, tot
 print mem, empty_mem
 #print watt
