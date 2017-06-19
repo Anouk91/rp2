@@ -5,13 +5,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 import glob
+from sklearn import datasets, linear_model
 
 sns.set(style="whitegrid", color_codes=True)
 os.chdir('/Users/anoukboukema/Desktop/SaNE/rp2/git/rp2/data')
-cpu=np.load('306_*cpu_user*.npy')
-watt = np.load('306_hw*.npy')
+cpu, mem=np.load('x.npy')
+watt = np.load('y.npy')
 print cpu.size , watt.size
 itterate = watt
+print type(watt)
 
 # file_list = glob.glob('305*')
 # print file_list
@@ -30,10 +32,34 @@ itterate = watt
 #     else:
 #         x += 1
 
+# Create linear regression object
+regr = linear_model.LinearRegression()
 
-data = pd.DataFrame({'cpu' : cpu, 'watt' : watt})
+cpu = cpu.reshape(940, 1)
+# watt.reshape((940, 1))
+print cpu.shape, watt.shape
+regr.fit(cpu, watt)
+
+# The coefficients
+Coefficient = regr.coef_[0]
+print "Coefficient = ", Coefficient
+# # The mean squared error
+#mean = np.mean((regr.predict(cpu.reshape(940, )) - watt) ** 2 #"Mean squared error: ",
+# print mean
+# # Explained variance score: 1 is perfect prediction
+print int(regr.score(cpu, watt)) #'Variance score: ' ,
+
+# Plot outputs
+plt.scatter(cpu, watt,  color='black')
+plt.plot(cpu, regr.predict(cpu), color='blue', linewidth=3)
+
+# plt.xticks(())
+# plt.yticks(())
+plt.xlabel('CPU seconds')
+plt.ylabel('Watt')
+#data = pd.DataFrame({'cpu' : cpu, 'mem' : mem, 'watt' : watt})
 
 #g = sns.FacetGrid()
-sns.lmplot(x="cpu", y="watt", data=data)
+#sns.lmplot(x="cpu", y="watt", data=data)
 
 plt.show()
