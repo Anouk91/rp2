@@ -37,6 +37,7 @@ def read_rrd(key, interval):
             tot += 1
 
     half = make_half(complete, interval)
+    del half[-1]
     print key, len(half)
     return half
 
