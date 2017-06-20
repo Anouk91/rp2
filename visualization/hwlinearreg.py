@@ -12,7 +12,7 @@ os.chdir('/Users/anoukboukema/Desktop/SaNE/rp2/git/rp2/data')
 cpu, mem=np.load('x.npy')
 watt = np.load('y.npy')
 print cpu.size , watt.size
-itterate = watt
+itterate = cpu
 print type(watt)
 
 # file_list = glob.glob('305*')
@@ -21,21 +21,21 @@ print type(watt)
 #     if re.search('\d{3}..cpu', filename)
 #         cpu=np.load('filename)
 #     elif re.search('\d{3}..mem', filename)
-# x = 0
-# for i in range(0, itterate.size):
-#     #print itterate[i]
-#     if itterate[i] > 8.23954693487:
-#         print "deleted value ", itterate[i], " at index ", i, "current size: ", cpu.size
-#         #mem = np.delete(mem, x)
-#         watt = np.delete(watt, x)
-#         cpu = np.delete(cpu, x)
-#     else:
-#         x += 1
+x = 0
+for i in range(0, itterate.size):
+     #print itterate[i]
+     if itterate[i] > 4000:
+         print "deleted value ", itterate[i], " at index ", i, "current size: ", cpu.size
+         #mem = np.delete(mem, x)
+         watt = np.delete(watt, x)
+         cpu = np.delete(cpu, x)
+     else:
+         x += 1
 
 # Create linear regression object
 regr = linear_model.LinearRegression()
 
-cpu = cpu.reshape(940, 1)
+cpu = cpu.reshape(939, 1)
 # watt.reshape((940, 1))
 print cpu.shape, watt.shape
 regr.fit(cpu, watt)
