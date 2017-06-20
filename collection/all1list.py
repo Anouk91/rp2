@@ -84,8 +84,11 @@ def sum_lists1(a, b):
     return l 
 
 
-cpu = read_rrd('*cpu_idle*',5)
+cpu_idle = read_rrd('*cpu_idle*',5)
+cpu_system = read_rrd('*cpu_system*',5)
+cpu_softirq = read_rrd('*cpu_softirq*',5)
 mem = read_rrd('*mem_free*',5)
+cpu_user = read_rrd('*cpu_user*',5)
 watt = read_rrd('hw*',6)
 #print cpu, empty_cpu, tot
 #print mem, empty_mem
@@ -95,5 +98,5 @@ os.chdir('/home/aboukema/rp2/data/git/data')
 
 
 #print empty_hn_i,empty_hw, "tot =", tot
-np.save('x_idle', (cpu, mem))
+np.save('x_idle_sys_irq_usr', (cpu_idle, cpu_system, cpu_softirq, cpu_user))
 np.save('y_watt', (watt))
