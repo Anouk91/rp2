@@ -84,7 +84,7 @@ def sum_lists1(a, b):
     return l 
 
 
-cpu = read_rrd('*cpu_user*',5)
+cpu = read_rrd('*cpu_idle*',5)
 mem = read_rrd('*mem_free*',5)
 watt = read_rrd('hw*',6)
 #print cpu, empty_cpu, tot
