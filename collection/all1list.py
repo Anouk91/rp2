@@ -95,5 +95,5 @@ os.chdir('/home/aboukema/rp2/data/git/data')
 
 
 #print empty_hn_i,empty_hw, "tot =", tot
-np.save('x', (cpu, mem))
-np.save('y', (watt))
+np.save('x_idle', (cpu, mem))
+np.save('y_watt', (watt))
