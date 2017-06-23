@@ -42,7 +42,7 @@ def read_rrd(key, interval, pwd = pwd1):
                 empty = init_list(len(rrdfile[2]))
                 a = 1
             #print filename
-            if isinstance(rrdfile[2][2][0], float) and re.search('.*236.*',filename):
+            if isinstance(rrdfile[2][2][0], float) and re.search('.*235.*',filename):
                 data, empty= add_rrd(rrdfile, data, empty)
                 tot += 1
            # else: # isinstance(rrdfile[2][2][0], float): 
@@ -55,7 +55,7 @@ def read_rrd(key, interval, pwd = pwd1):
             data[i] = data[i]/10000
     
     #half = make_half(data, interval)
-    del data[-1]
+ #   del data[-1]
     print "lengths of ",key,  len(data)
     return data, empty
 
@@ -136,7 +136,7 @@ def gen_indexes(e1, l1, e2, l2):
 #watt = read_rrd('hw*',6)
 #usage_2142_N236.rrd
 cpu_pack, e6 = read_rrd('usage*',1,pwd3)
-cpu_hn, e4= read_rrd('hn236_cpu.rrd',6,pwd2)
+cpu_hn, e4= read_rrd('hn235_cpu.rrd',6,pwd2)
 #cpu_vps, e5 = read_rrd('i*_cpu.rrd',6,pwd2)
 
 #cpu_hw = sum_lists(cpu_system, cpu_softirq)
@@ -161,5 +161,5 @@ os.chdir('/home/aboukema/rp2/data/git/data')
 
 print "used files: ", tot, " all files: ", totall, " gives ", totall - tot , " deleted files"
 #print empty_hn_i,empty_hw, "tot =", tot
-np.save('236cpu_pack', (cpu_pack))
-np.save('236cpu_hn', (cpu_hn))
+np.save('235cpu_pack', (cpu_pack))
+np.save('235cpu_hn', (cpu_hn))
