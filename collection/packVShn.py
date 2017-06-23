@@ -50,6 +50,10 @@ def read_rrd(key, interval, pwd = pwd1):
             totall += 1      
     if pwd == pwd1:
         data = make_half(data, interval)   
+    if pwd == pwd3:
+        for i in range(len(data)):
+            data[i] = data[i]/10000
+    
     #half = make_half(data, interval)
     del data[-1]
     print "lengths of ",key,  len(data)
