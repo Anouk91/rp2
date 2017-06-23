@@ -115,7 +115,7 @@ def gen_indexes(e1, l1, e2, l2):
     index = 0 
     for i in range(len(e1)-10):
         if e1[i] > 7 or e2[i] > 7:
-            print "removed value ",e1[i],"&", e2[i], " at index ",i
+            print e1[i],"&", e2[i], " at index ",i, "with value", l1[index], l2[index] 
             removed += 1
             del l1[index]
             del l2[index]
@@ -148,7 +148,7 @@ cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
 #print mem, empty_mem
 #print watt
 print "length before ", len(cpu_pack), len(e6)
-gen_indexes(e4, cpu_pack, e6, cpu_hn)
+#gen_indexes(e4, cpu_pack, e6, cpu_hn)
 print "length after ", len(cpu_pack)
 #print "packages:\n ",e4,"\n Hosting nodes \n", e6
 os.chdir('/home/aboukema/rp2/data/git/data')
