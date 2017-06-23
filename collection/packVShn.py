@@ -45,8 +45,8 @@ def read_rrd(key, interval, pwd = pwd1):
             if isinstance(rrdfile[2][2][0], float) and re.search('.*236.*',filename):
                 data, empty= add_rrd(rrdfile, data, empty)
                 tot += 1
-            else: # isinstance(rrdfile[2][2][0], float): 
-				print "not used file = " ,filename, type(rrdfile[2][2][0])
+           # else: # isinstance(rrdfile[2][2][0], float): 
+		#		print "not used file = " ,filename, type(rrdfile[2][2][0])
             totall += 1      
     if pwd == pwd1:
         data = make_half(data, interval)   
@@ -118,7 +118,7 @@ def gen_indexes(e1, l1, e2, l2):
     removed = 0
     index = 0 
     for i in range(len(e1)-10):
-        if e1[i] > 7 or e2[i] > 7:
+        if e1[i] > 0 or e2[i] > 0:
             print e1[i],"&", e2[i], " at index ",i, "with value", l1[index], l2[index] 
             removed += 1
             del l1[index]
