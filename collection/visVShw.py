@@ -6,14 +6,13 @@ import re
 import glob
 
 #    ''''a script to create a text file containin all CPU seconds and wattage at the same time''''
-t1 = '1497279600' #2017-06-12 17:00 
-t2 = '1497520800' #2017-06-15 12:00
+t1 = '1497279900' #2017-06-12 17:00 
+t2 = '1497347700' #2017-06-13 12:00
 tot = 0
 totall = 0
 empty = 0
 
-
-pwd1 = '/home/aboukema/rp2/hardware_nodes'
+pwd1 = '/home/aboukema/rp2/hardware_nodes/5min'
 pwd2 = '/home/aboukema/rp2/data/machines' 
 
 def init_list(x):
@@ -31,8 +30,10 @@ def read_rrd(key, interval, pwd = pwd1):
     complete = []
     st = str(interval)
     for filename in file_list:
+#        if pwd == pwd1:
+ #           rrdtool.tune('%s/%s' % (pwd,filename), 'DELRRA:2') # add extra fill up first RRA with 4320 data points
         rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
-                '-r', st, 'm', '--start', t1, '--end', t2)
+                '-r', '5m', '--start', t1, '--end', t2)
         if re.search('30[2-8]',filename) or re.search('.*.rrd',key): 
 
             if a == 0:
@@ -45,10 +46,12 @@ def read_rrd(key, interval, pwd = pwd1):
             if not isinstance(rrdfile[2][2][0], float): 
 				print "not used file = " ,filename, type(rrdfile[2][2][0])
             totall += 1      
-    half = make_half(data, interval)
-    del half[-1]
-    print key, len(half)
-    return half, empty
+    if pwd == pwd1:
+        data = make_half(data, interval)   
+    #half = make_half(data, interval)
+    del data[-1]
+    print "lengths of ",key,  len(data)
+    return data, empty
 
 def save(x, i):
     os.chdir('/home/aboukema/rp2/data/git/data')
@@ -59,9 +62,11 @@ def add_rrd(rrd, data):
     rrd = list(rrd)
     empty_values = init_list(len(rrd[2]))
     for i in range(0, len(rrd[2])):
-        data[i] += rrd[2][i][0]
-        if not isinstance(rrd[2][i][0], float): #eigenlijk moet bij een none het hele datapunt worden verwijderd
-            empty_values[i] += 1
+
+        if isinstance(rrd[2][i][0], float): #eigenlijk moet bij een none het hele datapunt worden verwijderd
+            data[i] += rrd[2][i][0]
+        else:
+           empty_values[i] += 1
     return data, empty_values 
 
 def make_half(a, interval):
@@ -124,7 +129,7 @@ e_vis = sum_lists(e4, e5)
 
 #print mem, empty_mem
 #print watt
-print e_hw, e_vis
+#print e_hw, e_vis
 os.chdir('/home/aboukema/rp2/data/git/data')
 
 print "used files: ", tot, " all files: ", totall, " gives ", totall - tot , " deleted files"
