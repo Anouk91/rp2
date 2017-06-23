@@ -10,11 +10,11 @@ from sklearn import datasets, linear_model
 sns.set(style="whitegrid", color_codes=True)
 os.chdir('/Users/anoukboukema/Desktop/SaNE/rp2/git/rp2/data')
 
-mem, cpu_idle, cpu_system, cpu_softirq, cpu_user =np.load('mem_idle_sys_irq_usr.npy')
+#mem, cpu_idle, cpu_system, cpu_softirq, cpu_user =np.load('mem_idle_sys_irq_usr.npy')
+#
+#watt = np.load('y_watt.npy')
 
-watt = np.load('y_watt.npy')
-
-cpu = cpu_softirq
+#cpu = cpu_softirq
 
 
 
@@ -22,38 +22,53 @@ cpu = cpu_softirq
 #    cpu[i] = 1600 - cpu[i]
 
 
-for i in range(0,cpu.size):
-    cpu[i] += cpu_user[i] + cpu_softirq[i]
+#for i in range(0,cpu.size):
+#    cpu[i] += cpu_user[i] + cpu_softirq[i]
 
 
-print cpu.size , watt.size
+#print cpu.size , watt.size
+
+
+x = np.load('cpu_vis.npy')
+y = np.load('cpu_hw.npy')
+
+itterate = x
+
+index = 0
+deleted_values = 0
+for i in range(0, len(itterate)):
+    if itterate[i] < 50:
+        print "deleted value ", x[index], i
+        x = np.delete( x, index)
+        y = np.delete( y, index)
+        deleted_values += 1
+    else:
+        index += 1
 
 
 # Create linear regression object
 regr = linear_model.LinearRegression()
 
-cpu = cpu.reshape(-1, 1)
+x = x.reshape(-1, 1)
 # watt.reshape((940, 1))
-print cpu.shape, watt.shape
-regr.fit(cpu, watt)
+print x.shape, y.shape
+regr.fit(x, y)
 
 # The coefficients
 Coefficient = regr.coef_[0]
 print "Coefficient = ", Coefficient
-# # The mean squared error
-#mean = np.mean((regr.predict(cpu.reshape(940, )) - watt) ** 2 #"Mean squared error: ",
-# print mean
-# # Explained variance score: 1 is perfect prediction
-print int(regr.score(cpu, watt)) #'Variance score: ' ,
+
+
 
 # Plot outputs
-plt.scatter(cpu, watt,  color='black')
-plt.plot(cpu, regr.predict(cpu), color='blue', linewidth=3)
+plt.scatter(x, y,  color='black')
+plt.plot(x, regr.predict(x), color='blue', linewidth=3)
 
 # plt.xticks(())
 # plt.yticks(())
-plt.xlabel('CPU')
-plt.ylabel('Watt')
+plt.xlabel('Visualization Layer (s)')
+plt.ylabel('Hardware Layer (%)')
+plt.title('CPU')
 #data = pd.DataFrame({'cpu' : cpu, 'mem' : mem, 'watt' : watt})
 
 #g = sns.FacetGrid()

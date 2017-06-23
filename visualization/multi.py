@@ -8,21 +8,22 @@ from sklearn.metrics import mean_squared_error
 
 os.chdir('/Users/anoukboukema/Desktop/SaNE/rp2/git/rp2/data')
 
-data =np.load('mem_idle_sys_irq_usr.npy')
-
-cpu = data[1] + data[2] + data[3]
-data = np.vstack((data[0], cpu))
+x =np.load('cpu_vis.npy')
+y = np.load('cpu_hw.npy')
 
 
-print cpu.shape, data.shape
-watt = np.load('y_watt.npy')
-A = np.vstack([data  , np.ones(len(data[0]))]).T
-#print A.shape
+#cpu = data[1] + data[2] + data[3]
+#data = np.vstack((data[0], cpu))
+
+
+A = np.vstack([x  , np.ones(len(x))]).T
+y = y.T
+
+print A.shape, y.shape
 
 indices = np.random.permutation(A.shape[0])
 training_id, test_id = indices[:750], indices[750:]
 
-y = watt.T
 trainingx, testx = A[training_id,:], A[test_id,:]
 trainingy, testy = y[training_id], y[test_id]
 
@@ -30,7 +31,7 @@ trainingy, testy = y[training_id], y[test_id]
 
 weights = np.linalg.lstsq(trainingx, trainingy)[0]
 weights = weights.reshape(-1,1)
-#print weights
+print weights
 
 
 y_pred = np.dot(testx, weights)
