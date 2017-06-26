@@ -60,9 +60,9 @@ def read_rrd(key, interval, pwd = pwd1):
 
     if pwd == pwd1:
         data = make_half(data, interval)
-    if pwd == pwd3:
-        for i in range(len(data)):
-            data [i] = data[i]/300
+#    if pwd == pwd3:
+#        for i in range(len(data)):
+#            data [i] = data[i]/300
 
 #    half = make_half(data, interval)
 #    del data[-1]
