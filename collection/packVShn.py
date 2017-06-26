@@ -11,7 +11,7 @@ t2 = '1497347700' #2017-06-13 12:00
 tot = 0
 totall = 0
 empty = 0
-
+rangehn = range(181,246)
 pwd3 = '/home/aboukema/rp2/data/packages'
 pwd2 = '/home/aboukema/rp2/data/machines' 
 pwd1 = '/home/aboukema/rp2/hardware_nodes' 
@@ -28,36 +28,46 @@ def read_rrd(key, interval, pwd = pwd1):
     a = 0
     os.chdir(pwd)
     file_list = glob.glob(key)    
-    complete = []
+    missing = []
     st = str(interval)
-    for filename in file_list:
+    for i in rangehn:
+        b = 0 
+        for filename in file_list:
 #        if pwd == pwd1:
  #           rrdtool.tune('%s/%s' % (pwd,filename), 'DELRRA:2') # add extra fill up first RRA with 4320 data points
-        rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
-                '-r', '5m', '--start', t1, '--end', t2)
-        if re.search('30[2-8]',filename) or re.search('.*.rrd',key): 
+            rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
+               '-r', '5m', '--start', t1, '--end', t2)
+            match =".*n%i.*" %i
 
-            if a == 0:
-                data = init_list(len(rrdfile[2]))
-                empty = init_list(len(rrdfile[2]))
-                a = 1
-            #print filename
-            if isinstance(rrdfile[2][2][0], float) and re.search('.*235.*',filename):
-                data, empty= add_rrd(rrdfile, data, empty)
-                tot += 1
-           # else: # isinstance(rrdfile[2][2][0], float): 
-		#		print "not used file = " ,filename, type(rrdfile[2][2][0])
-            totall += 1      
-    if pwd == pwd1:
-        data = make_half(data, interval)   
-    if pwd == pwd3:
-        for i in range(len(data)):
-            data[i] = data[i]/10000
+            if re.search(match,filename, re.IGNORECASE): 
+                if a == 0:           
+                    data =[] 
+                    a = 1
+                if b==0: 
+                    empty = init_list(len(rrdfile[2]))
+                    missing = concatinate(empty, missing)
+                    b = 1
+                    data = concatinate(empty, data)
+              #  print filename, a, b, rrdfile[2][2][0], float
+              #  print "len data",len(data), "len missing", len(missing)          
+                if isinstance(rrdfile[2][2][0], float):
+                    data, missing= add_rrd(rrdfile[2], data, missing)
+                    tot += 1
+                    print rrdfile[2][2][0]
+                else: #if not isinstance(rrdfile[2][2][0], float): 
+                    print "not used file = " ,filename, type(rrdfile[2][2][0])
+                    totall += 1    
+
+        if pwd == pwd1:
+            data = make_half(data, interval)   
+        if pwd == pwd3:
+           for i in range(len(data)):
+                data[i] = data[i]/10000
     
     #half = make_half(data, interval)
  #   del data[-1]
     print "lengths of ",key,  len(data)
-    return data, empty
+    return data, missing
 
 def save(x, i):
     os.chdir('/home/aboukema/rp2/data/git/data')
@@ -65,13 +75,13 @@ def save(x, i):
 
 
 def add_rrd(rrd, data, empty):
+    length = len(data) - len(rrd)
     rrd = list(rrd)
-    for i in range(0, len(rrd[2])):
-
-        if isinstance(rrd[2][i][0], float): #eigenlijk moet bij een none het hele datapunt worden verwijderd
-            data[i] += rrd[2][i][0]
+    for i in range(0, len(rrd)):
+        if isinstance(rrd[i][0], float): #eigenlijk moet bij een none het hele datapunt worden verwijderd
+            data[length + i] += rrd[i][0]
         else:
-           empty[i] += 1
+           empty[length + i] += 1
     return data, empty 
 
 def make_half(a, interval):
@@ -94,16 +104,16 @@ def make_half(a, interval):
   
 
 def concatinate(rrdFile, complete):
-    a = list(rrdFile)  
+    a = list(rrdFile)
     empty_values = init_list(len(a))
     length = len(complete) 
-    for i in range(0, len(a[2])):
-        if isinstance(a[2][i][0], float): #eigenlijk moet bij een none het hele datapunt worden verwijderd
-            complete.append(0)
-            complete[length] += a[2][i][0]
-            length += 1
-        else:
-             pass
+    for i in range(0, len(a)):
+#        if isinstance(a[2][i][0], float): #eigenlijk moet bij een none het hele datapunt worden verwijderd
+        complete.append(0)
+        complete[length] += a[i]
+        length += 1
+      #  else:
+      #       pass
     return complete 
 
 def sum_lists(a, b):
@@ -135,8 +145,9 @@ def gen_indexes(e1, l1, e2, l2):
 #cpu_user, e3 = read_rrd('*cpu_user*',5)
 #watt = read_rrd('hw*',6)
 #usage_2142_N236.rrd
+
+cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
 cpu_pack, e6 = read_rrd('usage*',1,pwd3)
-cpu_hn, e4= read_rrd('hn235_cpu.rrd',6,pwd2)
 #cpu_vps, e5 = read_rrd('i*_cpu.rrd',6,pwd2)
 
 #cpu_hw = sum_lists(cpu_system, cpu_softirq)
@@ -161,5 +172,5 @@ os.chdir('/home/aboukema/rp2/data/git/data')
 
 print "used files: ", tot, " all files: ", totall, " gives ", totall - tot , " deleted files"
 #print empty_hn_i,empty_hw, "tot =", tot
-np.save('235cpu_pack', (cpu_pack))
-np.save('235cpu_hn', (cpu_hn))
+np.save('cpu_pack_all', (cpu_pack))
+np.save('cpu_hn_all', (cpu_hn))
