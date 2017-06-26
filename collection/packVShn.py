@@ -164,7 +164,7 @@ cpu_pack, e6 = read_rrd('usage*',1,pwd3)
 #print mem, empty_mem
 #print watt
 print "length before ", len(cpu_pack), len(e6)
-gen_indexes(e4, cpu_pack, e6, cpu_hn)
+#gen_indexes(e4, cpu_pack, e6, cpu_hn)
 print "length after ", len(cpu_pack)
 #print "packages:\n ",e4,"\n Hosting nodes \n", e6
 os.chdir('/home/aboukema/rp2/data/git/data')
