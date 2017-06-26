@@ -8,15 +8,15 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-t1 = '1496836800' #2017-06-06 14:00 
-t2 = '1497347700' #2017-06-13 12:00
+t1 = '1497628800'  # 2017-06-16 18:00
+t2 = '1498230000'  # 2017-06-23 17:00 
 not_used_files = 0
 total_files = 0
 rangeHN = range(181,246)
 
 pwd3 = '/home/aboukema/rp2/data/packages'
 pwd2 = '/home/aboukema/rp2/data/machines' 
-pwd1 = '/home/aboukema/rp2/hardware_nodes' 
+pwd1 = '/home/aboukema/rp2/data/hardware_nodes' 
 
 def init_list(x):
     empty_array = []
@@ -60,9 +60,9 @@ def read_rrd(key, interval, pwd = pwd1):
 
     if pwd == pwd1:
         data = make_half(data, interval)
-#    if pwd == pwd3:
-#        for i in range(len(data)):
-#            data [i] = data[i]/300
+    if pwd == pwd3:
+        for i in range(len(data)):
+            data [i] = data[i]/10000
 
 #    half = make_half(data, interval)
 #    del data[-1]
@@ -161,7 +161,7 @@ print "length after ", len(cpu_pack)
 
 
 os.chdir('/home/aboukema/rp2/data/git/data')
-
-print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t" ,((total_files - not_used_files)/total_files)*100, "% useable files"
+used_files = ((total_files - not_used_files)/total_files)*100    
+print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t" ,used_files, "% useable files"
 np.save('cpu_pack_all', (cpu_pack))
 np.save('cpu_hn_all', (cpu_hn))
