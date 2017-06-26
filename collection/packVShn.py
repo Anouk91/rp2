@@ -57,12 +57,13 @@ def read_rrd(key, interval, pwd = pwd1):
                 else: #if not isinstance(rrdfile[2][2][0], float): 
                     print "not used file = " ,filename, type(rrdfile[2][2][0])
                     totall += 1    
+#                if pwd == pwd3:
+ #                   for i in range(len(data)):
+  #                      data[i] = data[i]/10000
 
         if pwd == pwd1:
             data = make_half(data, interval)   
-        if pwd == pwd3:
-           for i in range(len(data)):
-                data[i] = data[i]/10000
+
     
     #half = make_half(data, interval)
  #   del data[-1]
@@ -129,14 +130,14 @@ def gen_indexes(e1, l1, e2, l2):
     index = 0 
     for i in range(len(e1)-10):
         if e1[i] > 0 or e2[i] > 0:
-            print e1[i],"&", e2[i], " at index ",i, "with value", l1[index], l2[index] 
+    #        print e1[i],"&", e2[i], " at index ",i, "with value", l1[index], l2[index] 
             removed += 1
             del l1[index]
             del l2[index]
         else: 
             index += 1
 
-    print "removed amoun = " , removed
+    print "removed amount = " , removed
 
 #cpu_idle = read_rrd('*cpu_idle*',5)
 #cpu_system, e1 = read_rrd('*cpu_system*',5)
