@@ -57,7 +57,7 @@ def read_rrd(key, interval, pwd = pwd1):
 #            data [i] = data[i]/10000
 
 #    half = make_half(data, interval)
-#    del data[-1]
+    del data[-1]
     print "lengths of ",key,  len(data), len(missing)
     return data, missing
 
@@ -120,7 +120,7 @@ def gen_indexes(e1, l1, e2, l2):
     removed = 0
     index = 0 
     for i in range(len(e1)-10):
-        if e1[i] > 0 or e2[i] > 0:
+        if e1[i] > 1 or e2[i] > 1:
             removed += 1
             del l1[index]
             del l2[index]
@@ -150,7 +150,7 @@ print "length before ", len(cpu_hw), len(e_hw)
 gen_indexes(e_hw, cpu_hw, e_vis, cpu_vis)
 print "length after ", len(cpu_hw)
 
-
+print e_vis, e_hw
 
 os.chdir('/home/aboukema/rp2/data/git/data')
 used_files = (total_files - not_used_files)
