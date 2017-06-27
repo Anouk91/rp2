@@ -36,8 +36,8 @@ def read_rrd(key, interval, pwd = pwd1):
     for filename in file_list: #--- Itterate through all files in directory ---#
          rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
              '-r', '5m', '--start', t1, '--end', t2)
-#         if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
-#             rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2') # 'RRA#0:+4320')  # add extra fill up first RRA with 4320 data points
+         if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
+             rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')  #'RRA#0:-4320')# #  # add extra fill up first RRA with 4320 data points
          
          if filename == file_list[0]: #--- create the empty start ---#
              empty = init_list(len(rrdfile[2]))
@@ -130,12 +130,13 @@ def gen_indexes(e1, l1, e2, l2):
 
 
 #--- Creating the data lists, by giving a key string to find the right rrdfiles, giving the interval underwhich it is collected, and under wich directory it should be found---#
-cpu_system, e1 = read_rrd('*cpu_system*',5)
-cpu_softirq, e2 = read_rrd('*cpu_softirq*',5)
-cpu_user, e3 = read_rrd('*cpu_user*',5)
-cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
+#cpu_system, e1 = read_rrd('*cpu_system*',5)
+#cpu_softirq, e2 = read_rrd('*cpu_softirq*',5)
+#cpu_user, e3 = read_rrd('*cpu_user*',5)
+mem_free, e10 = read_rrd('*mem_free*',5)
+#cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
 #cpu_pack, e6 = read_rrd('usage*',1,pwd3)
-cpu_vps, e5 = read_rrd('i*_cpu.rrd',6,pwd2)
+#cpu_vps, e5 = read_rrd('i*_cpu.rrd',6,pwd2)
 
 #--- Add lists together ---#
 cpu_hw = sum_lists(cpu_system, cpu_softirq)
