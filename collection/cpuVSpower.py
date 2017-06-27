@@ -166,3 +166,4 @@ percent = (float(used_files) /float(total_files))*100
 print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t%.2f "  %percent, "% useable files"
 #np.save('cpu_', (cpu_vis))
 np.save('cpu_mem_hw', (cpu_hw, mem_free))
+np.save('power_hw', (watt))
