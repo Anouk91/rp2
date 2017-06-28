@@ -37,7 +37,7 @@ def read_rrd(key, interval, pwd = pwd1):
 
         for filename in file_list: #--- Itterate through all files in directory ---#
 #            if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
-#                rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')   # 'RRA#0:-4320')###  # add extra fill up first RRA with 4320 data points
+#                rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')   #'RRA#0:+4320')# ##  # add extra fill up first RRA with 4320 data points
             rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
                '-r', '5m', '--start', t1, '--end', t2)
             match =".*%i.*" %i
@@ -146,7 +146,8 @@ def gen_indexes(e1, l1, e2, l2):
 cpu_system, e1 = read_rrd('*cpu_system*',5)
 cpu_softirq, e2 = read_rrd('*cpu_softirq*',5)
 cpu_user, e3 = read_rrd('*cpu_user*',5)
-mem_free, e4 = read_rrd('*mem_free*',5)
+cpu_idle, e11 = read_rrd('*cpu_idle*',5)
+#mem_free, e4 = read_rrd('*mem_free*',5)
 watt, e5 = read_rrd('hw*',5, pwd2)
 #cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
 #cpu_pack, e6 = read_rrd('usage*',1,pwd3)
@@ -163,7 +164,7 @@ e_hw = sum_lists(e_hw, e3)
 #print e_hw
 #--- remove the data points which contain 1 or more empty values---#
 print "length before ", len(cpu_hw), len(watt), len(e_hw)
-gen_indexes(e_hw, cpu_hw, e5, watt)
+gen_indexes(e11, cpu_idle, e5, watt)
 print "length after ", len(cpu_hw)
 
 
@@ -172,5 +173,5 @@ used_files = (total_files - not_used_files)
 percent = (float(used_files) /float(total_files))*100
 print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t%.2f "  %percent, "% useable files"
 #np.save('cpu_', (cpu_vis))
-np.save('cpu_mem_hw', (cpu_hw, mem_free))
+np.save('cpu_idle', (cpu_idle))
 np.save('power_hw', (watt))
