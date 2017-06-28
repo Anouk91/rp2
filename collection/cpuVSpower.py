@@ -8,11 +8,11 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-t1 ='1497980400' #2017-06-20 19:40 '1497628800'  # 2017-06-16 18:00
-t2 = '1498230000'  # 2017-06-23 17:00 
+t1 = '1498314600' #2017-06-24 16:30 
+t2 = '1498563000' #2017-06-27 13:30
 not_used_files = 0
 total_files = 0
-rangeHW = range(301,310)
+rangeHW = range(301,313)
 
 pwd3 = '/home/aboukema/rp2/data/packages'
 pwd2 = '/home/aboukema/rp2/data/machines' 
@@ -36,8 +36,8 @@ def read_rrd(key, interval, pwd = pwd1):
         newHW = True
 
         for filename in file_list: #--- Itterate through all files in directory ---#
-#        if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
-#            rrdtool.tune('%s/%s' % (pwd,filename), 'DELRRA:2') # add extra fill up first RRA with 4320 data points
+#            if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
+#                rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')# 'RRA#0:+4320')#  # add extra fill up first RRA with 4320 data points
             rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
                '-r', '5m', '--start', t1, '--end', t2)
             match =".*%i.*" %i
@@ -48,7 +48,7 @@ def read_rrd(key, interval, pwd = pwd1):
                     missing = concatinate(empty, missing)
                     newHW = False
                     data = concatinate(empty, data)
-                    print  rrdfile[2][0][0]
+#                    print  rrdfile[2][0][0]
                 if isinstance(rrdfile[2][2][0], float): #--- Exclude empty rrdfiles---#
                     data, missing= add_rrd(rrdfile[2], data, missing, pwd)
                 else:  
