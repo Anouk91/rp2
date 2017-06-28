@@ -8,8 +8,8 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-t1 = '1498314600' #2017-06-24 16:30 
-t2 = '1498563000' #2017-06-27 13:30
+t1 = '1498395600' # 2017-06-25 15:00
+t2 = '1498643940' # 2017-06-28 11:59
 not_used_files = 0
 total_files = 0
 rangeHW = range(301,313)
@@ -37,7 +37,7 @@ def read_rrd(key, interval, pwd = pwd1):
 
         for filename in file_list: #--- Itterate through all files in directory ---#
 #            if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
-#                rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')# 'RRA#0:+4320')#  # add extra fill up first RRA with 4320 data points
+#                rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')   # 'RRA#0:-4320')###  # add extra fill up first RRA with 4320 data points
             rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
                '-r', '5m', '--start', t1, '--end', t2)
             match =".*%i.*" %i
@@ -68,7 +68,6 @@ def read_rrd(key, interval, pwd = pwd1):
             data [i] = data[i]/10000
 
 #    half = make_half(data, interval)
-    del data[-1]
     print "lengths of ",key,  len(data)
     return data, missing
 
@@ -95,17 +94,20 @@ def add_rrd(rrd, data, empty, pwd):
 def make_half(a, interval):
     half =[0] 
     new_interval = 0
-    count = 1 
+    count = 0 
     for i in range(0, len(a)):
         if count != interval:
             half[new_interval] += a[i]
             count += 1
         else:
             half.append(0)
-            half[new_interval] = half[new_interval]/interval
+            half[new_interval] =float(half[new_interval])/float(interval)
             new_interval += 1
             half[new_interval] += a[i]
             count = 1
+    half[new_interval] =float(half[new_interval])/float(interval)
+    if len(half) != len(a)/interval:
+         del half[-1]
     return half
   
 
@@ -113,7 +115,7 @@ def concatinate(rrdFile, complete):
     a = list(rrdFile)
     empty_values = init_list(len(a))
     length = len(complete) 
-    for i in range(0, len(a)):
+    for i in range(len(a)):
         complete.append(0)
         complete[length] += a[i]
         length += 1
@@ -130,7 +132,7 @@ def sum_lists(a, b):
 def gen_indexes(e1, l1, e2, l2):
     removed = 0
     index = 0 
-    for i in range(len(e1)-10):
+    for i in range(len(e1)):
         if e1[i] > 0 or e2[i] > 0:
             removed += 1
             del l1[index]
@@ -160,7 +162,7 @@ e_hw = sum_lists(e_hw, e3)
 
 #print e_hw
 #--- remove the data points which contain 1 or more empty values---#
-print "length before ", len(cpu_hw), len(e_hw)
+print "length before ", len(cpu_hw), len(watt), len(e_hw)
 gen_indexes(e_hw, cpu_hw, e5, watt)
 print "length after ", len(cpu_hw)
 
