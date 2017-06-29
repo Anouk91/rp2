@@ -8,8 +8,8 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-t1 = '1498395600' # 2017-06-25 15:00
-t2 = '1498643940' # 2017-06-28 11:59
+t1 = '1498482000' #2017-06-26 15:00
+t2 = '1498732140' #2017-06-29 12:29
 not_used_files = 0
 total_files = 0
 rangeHW = range(301,313)
@@ -37,7 +37,7 @@ def read_rrd(key, interval, pwd = pwd1):
 
         for filename in file_list: #--- Itterate through all files in directory ---#
 #            if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
-#                rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')   #'RRA#0:+4320')# ##  # add extra fill up first RRA with 4320 data points
+#                rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')#'RRA#0:+4320')# )   ###  # add extra fill up first RRA with 4320 data points
             rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
                '-r', '5m', '--start', t1, '--end', t2)
             match =".*%i.*" %i
@@ -153,7 +153,7 @@ def gen_indexes(e1, l1, e2, l2 , e3 = [], l3 = []):
 cpu_system, e1 = read_rrd('*cpu_system*',5)
 cpu_softirq, e2 = read_rrd('*cpu_softirq*',5)
 cpu_user, e3 = read_rrd('*cpu_user*',5)
-#cpu_idle, e11 = read_rrd('*cpu_idle*',5)
+cpu_idle, e11 = read_rrd('*cpu_idle*',5)
 mem_free, e4 = read_rrd('*mem_free*',5)
 watt, e5 = read_rrd('hw*',5, pwd2)
 #cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
