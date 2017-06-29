@@ -55,7 +55,7 @@ def read_rrd(key, interval, pwd = pwd1):
                      not_used_files += 1
                      print "not used file = " ,filename, type(rrdfile[2][2][0])
                 total_files += 1    
-                print filename, len(data)
+                print filename, len(data), len(missing)
 #                if pwd == pwd3: #data of the package is derive (counter) so should be devided by 300 to get average of 5 min
 #                    for i in range(len(data)):
 #                        data[i] = data[i]/300
@@ -77,6 +77,7 @@ def save(x, i):
 
 
 def add_rrd(rrd, data, empty, pwd):
+    indexsum = 0
     length = len(data) - len(rrd)
     if pwd == pwd3: #cpu data of packages is stored at index 1, all other have it stored at index 0
          index = 1 
@@ -84,10 +85,11 @@ def add_rrd(rrd, data, empty, pwd):
          index = 0
     rrd = list(rrd)
     for t in range(0, len(rrd)): #itterate through time points within rrd file and add to data at same (t)
-        if isinstance(rrd[t][index], float): 
+        if isinstance(rrd[t][index], float) or isinstance(rrd[t][index], int): 
             data[length + t] += rrd[t][index]
         else:
            empty[length + t] += 1
+           indexsum += t
     return data, empty 
 
 #---used to interpolate ---#
@@ -137,7 +139,7 @@ def gen_indexes(e1, l1, e2, l2 , e3 = [], l3 = []):
         e3 = init_list(len(e1))
         l3 = init_list(len(e1))
     for i in range(len(e1)):
-        if e1[i] > 1 or e2[i] > 1 or e3[i] > 1:
+        if e1[i] > 0 or e2[i] > 0 or e3[i] > 0: #has to be 0 when concatinating strings
             removed += 1
             del l1[index]
             del l2[index]
@@ -166,7 +168,6 @@ e_hw = sum_lists(e_hw, e3)
 #cpu_vis = sum_lists(cpu_hn, cpu_vps)
 #e_vis = sum_lists(e4, e5)
 
-#print e_hw
 #--- remove the data points which contain 1 or more empty values---#
 print "length before ", len(cpu_hw), len(watt), len(e_hw)
 gen_indexes( e5, watt, e_hw, cpu_hw,e4, mem_free)
