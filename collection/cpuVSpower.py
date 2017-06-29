@@ -12,7 +12,7 @@ t1 = '1498482000' #2017-06-26 15:00
 t2 = '1498732140' #2017-06-29 12:29
 not_used_files = 0
 total_files = 0
-rangeHW = range(301,313)
+rangeHW = range(301,309)
 
 pwd3 = '/home/aboukema/rp2/data/packages'
 pwd2 = '/home/aboukema/rp2/data/machines' 
