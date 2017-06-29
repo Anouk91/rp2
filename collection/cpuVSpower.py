@@ -129,14 +129,19 @@ def sum_lists(a, b):
 
 
 #--- remove the data points which contain 1 or more empty values---#
-def gen_indexes(e1, l1, e2, l2):
+def gen_indexes(e1, l1, e2, l2 , e3 = [], l3 = []):
     removed = 0
     index = 0 
+    print e1
+    if e3 == []:
+        e3 = init_list(len(e1))
+        l3 = init_list(len(e1))
     for i in range(len(e1)):
-        if e1[i] > 0 or e2[i] > 0:
+        if e1[i] > 1 or e2[i] > 1 or e3[i] > 1:
             removed += 1
             del l1[index]
             del l2[index]
+            del l3[index]
         else: 
             index += 1
     print "removed amount of time points = " , removed
@@ -146,8 +151,8 @@ def gen_indexes(e1, l1, e2, l2):
 cpu_system, e1 = read_rrd('*cpu_system*',5)
 cpu_softirq, e2 = read_rrd('*cpu_softirq*',5)
 cpu_user, e3 = read_rrd('*cpu_user*',5)
-cpu_idle, e11 = read_rrd('*cpu_idle*',5)
-#mem_free, e4 = read_rrd('*mem_free*',5)
+#cpu_idle, e11 = read_rrd('*cpu_idle*',5)
+mem_free, e4 = read_rrd('*mem_free*',5)
 watt, e5 = read_rrd('hw*',5, pwd2)
 #cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
 #cpu_pack, e6 = read_rrd('usage*',1,pwd3)
@@ -164,7 +169,7 @@ e_hw = sum_lists(e_hw, e3)
 #print e_hw
 #--- remove the data points which contain 1 or more empty values---#
 print "length before ", len(cpu_hw), len(watt), len(e_hw)
-gen_indexes(e11, cpu_idle, e5, watt)
+gen_indexes( e5, watt, e_hw, cpu_hw,e4, mem_free)
 print "length after ", len(cpu_hw)
 
 
@@ -173,5 +178,5 @@ used_files = (total_files - not_used_files)
 percent = (float(used_files) /float(total_files))*100
 print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t%.2f "  %percent, "% useable files"
 #np.save('cpu_', (cpu_vis))
-np.save('cpu_idle', (cpu_idle))
+np.save('cpu_hw', (cpu_hw, mem_free))
 np.save('power_hw', (watt))
