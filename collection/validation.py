@@ -126,7 +126,7 @@ def gen_indexes(e1, l1, e2, l2, e3, l3, e4, l4, e5, l5, e6, l6 ):
         e4 = init_list(len(e1))
         l4 = init_list(len(e1))
     for i in range(len(e1)):
-        if e1[i] > 0 or e2[i] > 0 or e3[i] > 0 or e4[i] > 0:
+        if e1[i] > 0 or e2[i] > 0 or e3[i] > 0 or e4[i] > 0 or e5[i] > 0 or e6[i] > 0:
             removed += 1
             del l1[index]
             del l2[index]
