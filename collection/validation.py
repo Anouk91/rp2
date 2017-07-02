@@ -34,12 +34,8 @@ def read_rrd(key, interval, pwd = pwd1):
     new = True
     st = str(interval)
     for filename in file_list: #--- Itterate through all files in directory ---#
-#        if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
-#            rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')#'RRA#0:+4320')## )   ###  # add extra fill up first RRA with 4320 data points
         rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
            '-r', '5m', '--start', t1, '--end', t2)
-#        print filename, rrdfile 
-      #  if filename == file_list[0]: 
         if new == True: 
             empty = init_list(len(rrdfile[2]))
             missing = concatinate(empty, missing)
@@ -53,10 +49,6 @@ def read_rrd(key, interval, pwd = pwd1):
              print "not used file = " ,filename, type(rrdfile[2][2][0])
         total_files += 1    
         print filename, len(data), len(missing)
-#        if pwd == pwd3: #data of the package is derive (counter) so should be devided by 300 to get average of 5 min
-#            for i in range(len(data)):
-#                data[i] = data[i]/300
-
     if pwd == pwd1:
         data = make_half(data, interval)
         missing = make_half(missing, interval)
@@ -69,10 +61,6 @@ def read_rrd(key, interval, pwd = pwd1):
             print "set to MB"
     print "lengths of ",key,  len(data)
     return data, missing
-
-def save(x, i):
-    os.chdir('/home/aboukema/rp2/data/git/data')
-    np.save(i,(x))
 
 
 def add_rrd(rrd, data, empty, pwd):
@@ -130,10 +118,10 @@ def sum_lists(a, b):
 
 
 #--- remove the data points which contain 1 or more empty values---#
-def gen_indexes(e1, l1, e2, l2 , e3 = [], l3 = [], e4 = [], l4 = []):
+def gen_indexes(e1, l1, e2, l2, e3, l3, e4, l4, e5, l5, e6, l6 ):
     removed = 0
     index = 0 
-    print e1
+    print e1, e2, e3, e4, e5, e6
     if e3 == []:
         e3 = init_list(len(e1))
         l3 = init_list(len(e1))
@@ -146,15 +134,16 @@ def gen_indexes(e1, l1, e2, l2 , e3 = [], l3 = [], e4 = [], l4 = []):
             del l2[index]
             del l3[index]
             del l4[index]
+            del l5[index]
         else: 
             index += 1
     print "removed amount of time points = " , removed
 
 
 #--- Creating the data lists, by giving a key string to find the right rrdfiles, giving the interval underwhich it is collected, and under wich directory it should be found---#
-#cpu_system, e1 = read_rrd('*cpu_system*',5)
-#cpu_softirq, e2 = read_rrd('*cpu_softirq*',5)
-#cpu_user, e3 = read_rrd('*cpu_user*',5)
+cpu_system, e1 = read_rrd('*cpu_system*',5)
+cpu_softirq, e2 = read_rrd('*cpu_softirq*',5)
+cpu_user, e3 = read_rrd('*cpu_user*',5)
 #cpu_idle, e4 = read_rrd('*cpu_idle*',5)
 #mem_free, e5 = read_rrd('*mem_free*',5)
 mem_cache, e6 = read_rrd('*mem_cache*',5)
@@ -162,18 +151,18 @@ mem_buffer, e7 = read_rrd('*mem_buffer*',5)
 mem_total, e8 = read_rrd('*mem_total*',5)
 
 watt, e9 = read_rrd('hw*',5, pwd2)
-#cpu_hn, e10= read_rrd('hn*_cpu.rrd',6,pwd2)
+cpu_hn, e10= read_rrd('hn*_cpu.rrd',6,pwd2)
 cpu_pack, e11 = read_rrd('usage*',1,pwd3)
 cpu_vps, e12 = read_rrd('i*_cpu.rrd',6,pwd2)
 
 #--- Add lists together ---#
-#cpu_hw = sum_lists(cpu_system, cpu_softirq)
-#cpu_hw = sum_lists(cpu_hw, cpu_user)
+cpu_hw = sum_lists(cpu_system, cpu_softirq)
+cpu_hw = sum_lists(cpu_hw, cpu_user)
 mem_hw = sum_lists(mem_cache, mem_buffer)
 mem_hw = sum_lists(mem_hw, mem_total)
 
-#e_cpu_hw = sum_lists(e1, e2)
-#e_cpu_hw = sum_lists(e_cpu_hw, e3)
+e_cpu_hw = sum_lists(e1, e2)
+e_cpu_hw = sum_lists(e_cpu_hw, e3)
 
 e_mem_hw = sum_lists(e6,e7)
 e_mem_hw = sum_lists(e_mem_hw,e8)
@@ -182,7 +171,7 @@ e_mem_hw = sum_lists(e_mem_hw,e8)
 
 #--- remove the data points which contain 1 or more empty values---#
 print "length before ", len(cpu_pack), len(watt), len(e_mem_hw)
-gen_indexes( e9, watt, e11, cpu_pack, e_mem_hw, mem_hw, e12, cpu_vps)
+gen_indexes( e9, watt, e11, cpu_pack, e_mem_hw, mem_hw, e12, cpu_vps, e_cpu_hw, cpu_hw, e10, cpu_hn)
 print "length after ", len(cpu_pack)
 
 
@@ -192,4 +181,4 @@ percent = (float(used_files) /float(total_files))*100
 print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t%.2f "  %percent, "% useable files"
 #np.save('cpu_', (cpu_vis))
 np.save('predict_paramaters', (cpu_pack, cpu_vps, mem_hw))
-np.save('true', (watt))
+np.save('true', (cpu_hn, cpu_hw, watt))
