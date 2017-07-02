@@ -66,7 +66,9 @@ def read_rrd(key, interval, pwd = pwd1):
     if pwd == pwd3:
         for i in range(len(data)):
             data [i] = data[i]/10000
-
+    if re.search('.*mem.*',filename, re.IGNORECASE):    
+        for i in range(len(data)):
+            data [i] = data[i]/1000000
 #    half = make_half(data, interval)
     print "lengths of ",key,  len(data)
     return data, missing
