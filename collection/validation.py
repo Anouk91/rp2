@@ -41,14 +41,13 @@ def read_rrd(key, interval, pwd = pwd1):
             missing = concatinate(empty, missing)
             new = False
             data = concatinate(empty, data)
-            print "new data type starten of length:", rrdfile[2][0][0]
         if isinstance(rrdfile[2][2][0], float): #--- Exclude empty rrdfiles---#
             data, missing= add_rrd(rrdfile[2], data, missing, pwd)
         else:  
              not_used_files += 1
-             print "not used file = " ,filename, type(rrdfile[2][2][0])
+#             print "not used file = " ,filename, type(rrdfile[2][2][0])
         total_files += 1    
-        print filename, len(data), len(missing)
+#        print filename, len(data), len(missing)
     if pwd == pwd1:
         data = make_half(data, interval)
         missing = make_half(missing, interval)
@@ -58,7 +57,6 @@ def read_rrd(key, interval, pwd = pwd1):
     if re.search('.*mem.*',filename, re.IGNORECASE): #shows memory in MB instead of bytes
         for i in range(len(data)):
             data [i] = data[i]/1000000
-            print "set to MB"
     print "lengths of ",key,  len(data)
     return data, missing
 
@@ -135,6 +133,7 @@ def gen_indexes(e1, l1, e2, l2, e3, l3, e4, l4, e5, l5, e6, l6 ):
             del l3[index]
             del l4[index]
             del l5[index]
+            del l6[index]
         else: 
             index += 1
     print "removed amount of time points = " , removed
