@@ -14,9 +14,9 @@ not_used_files = 0
 total_files = 0
 rangeHN = range(181,246)
 
-pwd3 = '/home/aboukema/rp2/3data/packages'
-pwd2 = '/home/aboukema/rp2/3data/machines' 
-pwd1 = '/home/aboukema/rp2/3data/hardware_nodes' 
+pwd3 = '/home/aboukema/rp2/data/packages'
+pwd2 = '/home/aboukema/rp2/data/machines' 
+pwd1 = '/home/aboukema/rp2/data/hardware_nodes' 
 
 def init_list(x):
     empty_array = []
