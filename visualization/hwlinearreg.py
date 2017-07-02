@@ -2,12 +2,10 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 import os
 import glob
 from sklearn import datasets, linear_model
 
-sns.set(style="whitegrid", color_codes=True)
 os.chdir('/Users/anoukboukema/Desktop/SaNE/rp2/git/rp2/data')
 
 #mem, cpu_idle, cpu_system, cpu_softirq, cpu_user =np.load('mem_idle_sys_irq_usr.npy')
@@ -29,24 +27,33 @@ os.chdir('/Users/anoukboukema/Desktop/SaNE/rp2/git/rp2/data')
 #print cpu.size , watt.size
 
 
-x = np.load('cpu_vis.npy')
-y = np.load('cpu_hw.npy')
+x = np.load('cpu_pack_all.npy')
+y = np.load('cpu_hn_all.npy')
+print len(x), len(y)
 
-itterate = x
+#itterate = x
+##
+#lowest = itterate[0]
+#highest = itterate[0]
+#index = 0
+#deleted_values = 0
+#for i in range(0, len(itterate)):
+#    if itterate[i] < lowest:
+#        lowest = itterate[i]
+#    if itterate[i] > highest:
+#        highest = itterate[i]
+#    if itterate[i] < 500:
+#        print "deleted value ", x[index], i
+#        x = np.delete( x, index)
+#        y = np.delete( y, index)
+#        deleted_values += 1
+#    else:
+#        index += 1
 
-index = 0
-deleted_values = 0
-for i in range(0, len(itterate)):
-    if itterate[i] < 50:
-        print "deleted value ", x[index], i
-        x = np.delete( x, index)
-        y = np.delete( y, index)
-        deleted_values += 1
-    else:
-        index += 1
-
-
+#print lowest, highest
 # Create linear regression object
+
+
 regr = linear_model.LinearRegression()
 
 x = x.reshape(-1, 1)
@@ -66,9 +73,9 @@ plt.plot(x, regr.predict(x), color='blue', linewidth=3)
 
 # plt.xticks(())
 # plt.yticks(())
-plt.xlabel('Visualization Layer (s)')
-plt.ylabel('Hardware Layer (%)')
-plt.title('CPU')
+plt.xlabel('Packages (s)')
+plt.ylabel('Hosting Nodes (s)')
+plt.title('CPU 16-6 till 23-6')
 #data = pd.DataFrame({'cpu' : cpu, 'mem' : mem, 'watt' : watt})
 
 #g = sns.FacetGrid()

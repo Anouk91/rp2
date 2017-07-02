@@ -9,17 +9,15 @@ import matplotlib.cm as cm
 
 os.chdir('/Users/anoukboukema/Desktop/SaNE/rp2/git/rp2/data')
 
-x= np.load('cpu_pack_all.npy')
-y = np.load('cpu_hn_all.npy')
-#t= x[1]
-#cpu = data[1] + data[2] + data[3]
-#data = np.vstack((data[0], cpu))
+cpu_pack, cpu_vps, mem_hw = np.load('predict_paramaters.npy')
+true_cpu_hn, true_cpu_hw, watt = np.load('true.npy')
 
+x = np.concatenate(true_cpu_hw, mem_hw)
 
-A = np.vstack([x, np.ones(len(x))]).T
-t = x[1].T
-y = y.T
-print A.shape
+A = np.vstack([true_cpu_hw, np.ones(len(true_cpu_hw))]).T
+#t = x[1].T
+y = watt.T
+print x.shape, A.shape
 percentTT = 0.2*y.size
 indices = np.random.permutation(A.shape[0])
 training_id, test_id = indices[percentTT:], indices[:percentTT] #750
@@ -40,34 +38,13 @@ mean = mean_squared_error(testy, y_pred, multioutput='raw_values')
 print "mean squared error = ", float(mean)
 
 
+cpu_hn = 0.49 * cpu_pack + 0.05734329*12
+cpu_hw = 3.15 *(cpu_hn + cpu_vps) + 186.25
+predict_power = 0.26553476 * cpu_hw + 3.07985209 * mem_hw + 90.97268386*12
 
 
-#--- Test matrix and vectors ---#
-#x = np.array([[0,1,2,3,4,5,],[10,11,12,13,14,15],[100,101,102,103,104,105]])
-#A = np.vstack([x, np.ones(len(x[0]))]).T
-#w = np.array([[2],[2],[2],[1]])
-#y = np.array([[ 222, 225, 235, 240, 245, 250]]).T
-#print A.shape, y.shape
-#
-#indices = np.random.permutation(A.shape[0])
-#training_id, test_id = indices[:4], indices[4:]
-#
-##print indices , "\n"
-#print "training id x = ", training_id, "test id x = ", test_id
-##print "y shape", y.shape
-#
-#trainingx, testx = A[training_id,:], A[test_id,:]
-#trainingy, testy = y[training_id], y[test_id]
-#print 'train x \n',  trainingx, '\n test x \n', testx  , '\n train y \n',  trainingy, '\n test y \n', testy
-##print x, x.shape, "\n"
-#
-##print w, w.shape
-#y_pred = np.dot(testx,w)
-##print dot.shape
-#
-#mean = mean_squared_error(testy, y_pred, multioutput='raw_values')
-#print mean
-
+mean = mean_squared_error(watt, predict_power, multioutput='raw_values')
+print "mean squared error = ", float(mean)
 
 
 #--- Making plot out of train data ---#
@@ -78,7 +55,7 @@ trainy = trainingy
 
 regr = linear_model.LinearRegression()
 regr.fit(trainx, trainy)
-print trainx.shape, trainy.shape
+#print trainx.shape, trainy.shape
 plt.scatter(trainx, trainy)#, c=trainingt, cmap = 'bwr')
 plt.plot(trainx, regr.predict(trainx), color='blue', linewidth=3)
 
@@ -89,6 +66,33 @@ plt.grid()
 #plt.colorbar()
 
 plt.show()
+
+
+
+#plt.subplot(221)
+#plt.scatter(cpu_hn, true_cpu_hn)
+#plt.xlabel('cpu HN predict')
+#plt.ylabel('cpu HN true')
+##plt.title('CPU part 1')
+#plt.grid()
+#
+#plt.subplot(222)
+#plt.scatter(cpu_hw, true_cpu_hw)
+#plt.xlabel('cpu HW predict')
+#plt.ylabel('cpu HW true')
+##plt.title('CPU part 2')
+#plt.grid()
+#
+#plt.subplot(223)
+#plt.scatter(predict_power, watt)
+#plt.xlabel('power predict')
+#plt.ylabel('power true')
+##plt.title('power part 3')
+#plt.grid()
+#
+#plt.subplot(224)
+#plt.boxplot(cpu_pack)
+#plt.show()
 
 
 
