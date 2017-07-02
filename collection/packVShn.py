@@ -8,8 +8,10 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-t1 = '1497628800'  # 2017-06-16 18:00
-t2 = '1498230000'  # 2017-06-23 17:00 
+t1 = '1498482000' #2017-06-26 15:00
+t2 = '1498732140' #2017-06-29 12:29
+#t1 = '1497628800'  # 2017-06-16 18:00
+#t2 = '1498230000'  # 2017-06-23 17:00 
 not_used_files = 0
 total_files = 0
 rangeHN = range(181,246)

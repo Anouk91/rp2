@@ -12,8 +12,6 @@ t1 = '1498482000' #2017-06-26 15:00
 t2 = '1498732140' #2017-06-29 12:29
 not_used_files = 0
 total_files = 0
-rangeHW = range(301,309)
-
 pwd3 = '/home/aboukema/rp2/data/packages'
 pwd2 = '/home/aboukema/rp2/data/machines' 
 pwd1 = '/home/aboukema/rp2/data/hardware_nodes' 
@@ -31,6 +29,8 @@ def read_rrd(key, interval, pwd = pwd1):
     file_list = glob.glob(key)    
     missing = []
     data = []
+    total_notused = not_used_files
+    total_total_files = total_files
     new = True
     st = str(interval)
     for filename in file_list: #--- Itterate through all files in directory ---#
@@ -43,6 +43,7 @@ def read_rrd(key, interval, pwd = pwd1):
             data = concatinate(empty, data)
         if isinstance(rrdfile[2][2][0], float): #--- Exclude empty rrdfiles---#
             data, missing= add_rrd(rrdfile[2], data, missing, pwd)
+#            print filename
         else:  
              not_used_files += 1
 #             print "not used file = " ,filename, type(rrdfile[2][2][0])
@@ -57,7 +58,9 @@ def read_rrd(key, interval, pwd = pwd1):
     if re.search('.*mem.*',filename, re.IGNORECASE): #shows memory in MB instead of bytes
         for i in range(len(data)):
             data [i] = data[i]/1000000
-    print "lengths of ",key,  len(data)
+    usedrrds = total_files - total_total_files
+    notusedrrds = not_used_files - total_notused
+    print "lengths of ",key,  len(data), "\ntotal files ", usedrrds, "\nnot used ", notusedrrds
     return data, missing
 
 
