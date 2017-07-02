@@ -8,10 +8,8 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-#t1 = '1498482000' #2017-06-26 15:00
-#t2 = '1498732140' #2017-06-29 12:29
-t1 = '1497628800'  # 2017-06-16 18:00
-t2 = '1498230000'  # 2017-06-23 17:00 
+t1 = '1498775400' #2017-06-30 00:30 '1498420800' #2017-06-25 22:00
+t2 = '1499022000' #2017-07-02 21:00
 not_used_files = 0
 total_files = 0
 rangeHN = range(181,246)
@@ -165,5 +163,5 @@ print "length after ", len(cpu_pack)
 os.chdir('/home/aboukema/rp2/data/git/data')
 used_files = ((total_files - not_used_files)/total_files)*100    
 print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t" ,used_files, "% useable files"
-np.save('olddata_newscript_pack', (cpu_pack))
-np.save('olddata_newscript_hn', (cpu_hn))
+np.save('cpu_pack_concat', (cpu_pack))
+np.save('cpu_hn_concat', (cpu_hn))
