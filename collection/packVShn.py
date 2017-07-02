@@ -165,5 +165,5 @@ print "length after ", len(cpu_pack)
 os.chdir('/home/aboukema/rp2/data/git/data')
 used_files = ((total_files - not_used_files)/total_files)*100    
 print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t" ,used_files, "% useable files"
-np.save('cpu_pack_all', (cpu_pack))
-np.save('cpu_hn_all', (cpu_hn))
+np.save('newdata_newscript_pack', (cpu_pack))
+np.save('newdata_newscript_hn', (cpu_hn))
