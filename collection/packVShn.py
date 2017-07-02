@@ -49,7 +49,7 @@ def read_rrd(key, interval, pwd = pwd1):
                     newHN = False
                     data = concatinate(empty, data)
                 if isinstance(rrdfile[2][2][0], float): #--- Exclude empty rrdfiles---#
-                    data, missing= add_rrd(rrdfile[2], data, missing, pwd)
+                    data, missing= add_rrd(rrdfile[2], data, missing, key)
                 else:  
                      not_used_files += 1
                      print "not used file = " ,filename, type(rrdfile[2][2][0])
@@ -74,9 +74,9 @@ def save(x, i):
     np.save(i,(x))
 
 
-def add_rrd(rrd, data, empty, pwd):
+def add_rrd(rrd, data, empty, key):
     length = len(data) - len(rrd)
-    if pwd == pwd3: #cpu data of packages is stored at index 1, all other have it stored at index 0
+    if key == 'usage*': #cpu data of packages is stored at index 1, all other have it stored at index 0
          index = 1 
     else:
          index = 0
@@ -124,14 +124,15 @@ def sum_lists(a, b):
 
 
 #--- remove the data points which contain 1 or more empty values---#
-def gen_indexes(e1, l1, e2, l2):
+def gen_indexes(e1, l1, e2, l2, e3, l3):
     removed = 0
     index = 0 
     for i in range(len(e1)-10):
-        if e1[i] > 0 or e2[i] > 0:
+        if e1[i] > 0 or e2[i] > 0 or e3[i] > 0:
             removed += 1
             del l1[index]
             del l2[index]
+            del l3[index]
         else: 
             index += 1
     print "removed amount of time points = " , removed
@@ -144,7 +145,7 @@ def gen_indexes(e1, l1, e2, l2):
 cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
 cpu_pack, e6 = read_rrd('usage*',1,pwd3)
 #cpu_vps, e5 = read_rrd('i*_cpu.rrd',6,pwd2)
-
+mem_pack, e8 = read_rrd('us*',1,pwd3)
 #--- Add lists together ---#
 #cpu_hw = sum_lists(cpu_system, cpu_softirq)
 #cpu_hw = sum_lists(cpu_hw, cpu_user)
@@ -155,7 +156,7 @@ cpu_pack, e6 = read_rrd('usage*',1,pwd3)
 
 #--- remove the data points which contain 1 or more empty values---#
 print "length before ", len(cpu_pack), len(e6)
-gen_indexes(e4, cpu_pack, e6, cpu_hn)
+gen_indexes(e4, cpu_pack, e6, cpu_hn, e8, mem_pack)
 print "length after ", len(cpu_pack)
 
 
@@ -163,5 +164,5 @@ print "length after ", len(cpu_pack)
 os.chdir('/home/aboukema/rp2/data/git/data')
 used_files = ((total_files - not_used_files)/total_files)*100    
 print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t" ,used_files, "% useable files"
-np.save('cpu_pack_concat', (cpu_pack))
+np.save('cpu_pack_mem_concat', (cpu_pack,mem_pack))
 np.save('cpu_hn_concat', (cpu_hn))
