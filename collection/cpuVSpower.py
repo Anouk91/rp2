@@ -8,8 +8,8 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-t1 = '1498482000' #2017-06-26 15:00
-t2 = '1498732140' #2017-06-29 12:29
+t1 = '1498775400' #2017-06-30 00:30 '1498420800' #2017-06-25 22:00
+t2 = '1499021940' #2017-07-02 21:00
 not_used_files = 0
 total_files = 0
 rangeHW = range(301,309)
@@ -161,7 +161,7 @@ mem_cache, e6 = read_rrd('*mem_cache*',5)
 mem_buffer, e7 = read_rrd('*mem_buffer*',5)
 mem_total, e8 = read_rrd('*mem_total*',5)
 
-watt, e5 = read_rrd('hw*',5, pwd2)
+watt, e9 = read_rrd('hw*',5, pwd2)
 #cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
 #cpu_pack, e6 = read_rrd('usage*',1,pwd3)
 #cpu_vps, e5 = read_rrd('i*_cpu.rrd',6,pwd2)
@@ -182,7 +182,7 @@ e_mem_hw = sum_lists(e_mem_hw,e8)
 
 #--- remove the data points which contain 1 or more empty values---#
 print "length before ", len(cpu_hw), len(watt), len(e_mem_hw)
-gen_indexes( e5, watt, e_cpu_hw, cpu_hw,e_mem_hw, mem_hw)
+gen_indexes( e9, watt, e_cpu_hw, cpu_hw,e_mem_hw, mem_hw)
 print "length after ", "cpu",len(cpu_hw), "mem",len(mem_hw), "watt", len(watt)
 
 
