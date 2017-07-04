@@ -38,7 +38,7 @@ def read_rrd(key, interval, pwd = pwd1):
            '-r', '5m', '--start', t1, '--end', t2)
 
         if isinstance(rrdfile[2][2][0], float): #--- Exclude empty rrdfiles---#
-            data= concatinate(rrdfile[2], data, interval)
+            data= concatinate(rrdfile[2], data, interval, key)
 #            print filename
         else:  
              not_used_files += 1
@@ -54,86 +54,25 @@ def read_rrd(key, interval, pwd = pwd1):
     return data
 
 
-def add_rrd(rrd, data, empty, pwd):
-    indexsum = 0
-    length = len(data) - len(rrd)
-    if pwd == pwd3: #cpu data of packages is stored at index 1, all other have it stored at index 0
-         index = 1 
-    else:
-         index = 0
-    rrd = list(rrd)
-    for t in range(0, len(rrd)): #itterate through time points within rrd file and add to data at same (t)
-        if isinstance(rrd[t][index], float) or isinstance(rrd[t][index], int): 
-            data[length + t] += rrd[t][index]
-        else:
-           empty[length + t] += 1
-           indexsum += t
-    return data, empty 
-
-#---used to interpolate ---#
-def make_half(a, interval):
-    half =[0] 
-    new_interval = 0
-    count = 0 
-    for i in range(0, len(a)):
-        if count != interval:
-            half[new_interval] += a[i]
-            count += 1
-        else:
-            half.append(0)
-            half[new_interval] =float(half[new_interval])/float(interval)
-            new_interval += 1
-            half[new_interval] += a[i]
-            count = 1
-    half[new_interval] =float(half[new_interval])/float(interval)
-    if len(half) != len(a)/interval:
-         del half[-1]
-    return half
   
 
-def concatinate(rrdFile, complete, time):
+def concatinate(rrdFile, complete, time, key):
     a = list(rrdFile)
     complete.append(0)
-    #length = len(complete)
-    complete[-1] += a[time][1]
+    if key == 'us*':
+        complete[-1] += a[time][0]
+    else:
+        complete[-1] += a[time][1]
     return complete 
-
-def sum_lists(a, b):
-    l = init_list(len(a))
-    for i in range(0, len(a)):
-        l[i] = b[i] + a[i]
-    return l 
-
-
-#--- remove the data points which contain 1 or more empty values---#
-def gen_indexes(e1, l1, e2, l2, e3, l3, e4, l4, e5, l5, e6, l6 ):
-    removed = 0
-    index = 0 
-    print e1, e2, e3, e4, e5, e6
-    if e3 == []:
-        e3 = init_list(len(e1))
-        l3 = init_list(len(e1))
-        e4 = init_list(len(e1))
-        l4 = init_list(len(e1))
-    for i in range(len(e1)):
-        if e1[i] > 0 or e2[i] > 0 or e3[i] > 0 or e4[i] > 0 or e5[i] > 0 or e6[i] > 0:
-            removed += 1
-            del l1[index]
-            del l2[index]
-            del l3[index]
-            del l4[index]
-            del l5[index]
-            del l6[index]
-        else: 
-            index += 1
-    print "removed amount of time points = " , removed
 
 
 #--- Creating the data lists, by giving a key string to find the right rrdfiles, giving the interval underwhich it is collected, and under wich directory it should be found---#
 pack1 = read_rrd('usage*',1,pwd3)
 pack10 = read_rrd('usage*',10,pwd3)
 pack20 = read_rrd('usage*',20,pwd3)
-
+mem1 = read_rrd('us*',1,pwd3)
+mem10 = read_rrd('us*',10,pwd3)
+mem20 = read_rrd('us*',20,pwd3)
 print pack1
 
 
@@ -141,4 +80,6 @@ os.chdir('/home/aboukema/rp2/data/git/data')
 used_files = (total_files - not_used_files)
 percent = (float(used_files) /float(total_files))*100
 print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t%.2f "  %percent, "% useable files"
-np.save('packages', (pack1, pack10, pack20))
+np.save('pack1', (pack1, mem1))
+np.save('pack10', (pack10, mem10))
+np.save('pack20', (pack20, mem20))
