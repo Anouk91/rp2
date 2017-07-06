@@ -60,7 +60,7 @@ def read_rrd(key, interval, pwd = pwd1):
             data [i] = data[i]/1000000
     usedrrds = total_files - total_total_files
     notusedrrds = not_used_files - total_notused
-    print "lengths of ",key,  len(data), "\ntotal files ", usedrrds, "\nnot used ", notusedrrds
+    print "lengths of ",key,  len(data), "\ntotal files ", usedrrds, "\nnot used ", notusedrrds, "\nused files ", usedrrds -notusedrrds 
     return data, missing
 
 
