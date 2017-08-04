@@ -8,8 +8,8 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-t1 = '1498775400' #2017-06-30 00:30 '1498420800' #2017-06-25 22:00
-t2 = '1499021940' #2017-07-02 21:00
+t1 = '1500820200' #sun: 2017-07-23 16:30
+t2 = '1501070340' #wed: 2017-07-26 14:00
 not_used_files = 0
 total_files = 0
 pwd3 = '/home/aboukema/rp2/data/packages'
@@ -122,7 +122,7 @@ def sum_lists(a, b):
 def gen_indexes(e1, l1, e2, l2, e3, l3, e4, l4, e5, l5, e6, l6 ):
     removed = 0
     index = 0 
-    print e1, e2, e3, e4, e5, e6
+    print "e1" , len(e1), "\ne2", len(e2), len(e3), len(e4), len(e5), len(e6)
     if e3 == []:
         e3 = init_list(len(e1))
         l3 = init_list(len(e1))

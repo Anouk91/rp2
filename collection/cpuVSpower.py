@@ -8,8 +8,9 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-t1 = '1498775400' #2017-06-30 00:30 '1498420800' #2017-06-25 22:00
-t2 = '1499021940' #2017-07-02 21:00
+t1 = '1500820200' #sun: 2017-07-23 16:30
+t2 = '1501070400' #wed: 2017-07-26 14:00
+
 not_used_files = 0
 total_files = 0
 rangeHW = range(301,309)
@@ -36,8 +37,9 @@ def read_rrd(key, interval, pwd = pwd1):
         newHW = True
 
         for filename in file_list: #--- Itterate through all files in directory ---#
-#            if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
-#                rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')#'RRA#0:+4320')## )   ###  # add extra fill up first RRA with 4320 data points
+            if pwd == pwd1: #--- uncomment if you want to TUNE the data in pwd1---#
+                rrdtool.tune('%s/%s' % (pwd,filename),'DELRRA:2')
+#                rrdtool.tune('%s/%s' % (pwd,filename),'RRA#0:+4320')## )   ###  # add extra fill up first RRA with 4320 data points
             rrdfile = rrdtool.fetch( '%s/%s' % (pwd,filename), 'AVERAGE',
                '-r', '5m', '--start', t1, '--end', t2)
             match =".*%i.*" %i
@@ -148,6 +150,7 @@ def gen_indexes(e1, l1, e2, l2 , e3 = [], l3 = []):
             del l3[index]
         else: 
             index += 1
+     
     print "removed amount of time points = " , removed
 
 
