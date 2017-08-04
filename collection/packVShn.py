@@ -8,8 +8,8 @@ import glob
 #--- a script to create a text file containin all CPU seconds and wattage at the same time ---#
 
 #--- Variables ---#
-t1 = '1498775400' #2017-06-30 00:30 '1498420800' #2017-06-25 22:00
-t2 = '1499022000' #2017-07-02 21:00
+t1 = '1500820200' #sun: 2017-07-23 16:30
+t2 = '1501070400' #wed: 2017-07-26 14:00
 not_used_files = 0
 total_files = 0
 rangeHN = range(181,246)
@@ -50,6 +50,7 @@ def read_rrd(key, interval, pwd = pwd1):
                     data = concatinate(empty, data)
                 if isinstance(rrdfile[2][2][0], float): #--- Exclude empty rrdfiles---#
                     data, missing= add_rrd(rrdfile[2], data, missing, key)
+                    print "there are also non empty files", match
                 else:  
                      not_used_files += 1
                      print "not used file = " ,filename, type(rrdfile[2][2][0])
