@@ -27,9 +27,13 @@ os.chdir('/Users/anoukboukema/Desktop/SaNE/rp2/git/rp2/data')
 #print cpu.size , watt.size
 
 
-x = np.load('cpu_pack_all.npy')
-y = np.load('cpu_hn_all.npy')
+
+x = np.load('cpu_pack_concat.npy')
+y = np.load('cpu_hn_concat.npy')
 print len(x), len(y)
+
+for i in range(x.size):
+    print x[i]
 
 #itterate = x
 ##
