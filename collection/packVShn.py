@@ -50,7 +50,7 @@ def read_rrd(key, interval, pwd = pwd1):
                     data = concatinate(empty, data)
                 if isinstance(rrdfile[2][2][0], float): #--- Exclude empty rrdfiles---#
                     data, missing= add_rrd(rrdfile[2], data, missing, key)
-                    print filename
+                    print filename, len(data)
                 else:  
                      not_used_files += 1
  #                    print "not used file = " ,filename, type(rrdfile[2][2][0])
@@ -68,6 +68,9 @@ def read_rrd(key, interval, pwd = pwd1):
 #    half = make_half(data, interval)
 #    del data[-1]
     print "lengths of ",key,  len(data)
+    used_files = (total_files - not_used_files)
+    percent = (float(used_files) /float(total_files))*100
+    print "all files: \t", total_files, "\nremoved files \t", not_used_files , "\ngives \t%.2f "  %percent, "% useable files"
     return data, missing
 
 def save(x, i):
@@ -143,8 +146,8 @@ def gen_indexes(e1, l1, e2, l2):#, e3, l3):
 #cpu_system, e1 = read_rrd('*cpu_system*',5)
 #cpu_softirq, e2 = read_rrd('*cpu_softirq*',5)
 #cpu_user, e3 = read_rrd('*cpu_user*',5)
-cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
 cpu_pack, e6 = read_rrd('usage*',1,pwd3)
+cpu_hn, e4= read_rrd('hn*_cpu.rrd',6,pwd2)
 #cpu_vps, e5 = read_rrd('i*_cpu.rrd',6,pwd2)
 #mem_pack, e8 = read_rrd('us*',1,pwd3)
 #--- Add lists together ---#
@@ -155,6 +158,11 @@ cpu_pack, e6 = read_rrd('usage*',1,pwd3)
 #cpu_vis = sum_lists(cpu_hn, cpu_vps)
 #e_vis = sum_lists(e4, e5)
 
+used_files = (total_files - not_used_files)
+percent = (float(used_files) /float(total_files))*100
+
+print "all files: \t", total_files, "\nremoved files \t", not_used_files , "\ngives \t%.2f "  %percent, "% useable files"
+
 #--- remove the data points which contain 1 or more empty values---#
 print "length before ", len(cpu_pack), len(e6)
 gen_indexes(e4, cpu_pack, e6, cpu_hn)#, e8, mem_pack)
@@ -163,9 +171,6 @@ print "length after ", len(cpu_pack)
 
 
 os.chdir('/home/aboukema/rp2/data/git/data')
-used_files = (total_files - not_used_files)
-percent = (float(used_files) /float(total_files))*100
-print "all files: \t", total_files, "\n removed files \t", not_used_files , "\ngives \t%.2f "  %percent, "% useable files"
 np.save('cpu_pack_concat', (cpu_pack))
 #np.save('cpu_pack_mem_concat', (cpu_pack,mem_pack))
 np.save('cpu_hn_concat', (cpu_hn))
