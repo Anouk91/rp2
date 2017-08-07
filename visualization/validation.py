@@ -7,10 +7,9 @@ from sklearn import datasets, linear_model
 from sklearn.metrics import mean_squared_error
 import matplotlib.cm as cm
 
-os.chdir('/Users/anoukboukema/Desktop/SaNE/rp2/git/rp2/data')
+os.chdir('/Users/anoukboukema/Desktop/rp2/data')
 
-cpu_pack, cpu_vps, mem_hw = np.load('predict_paramaters.npy')
-true_cpu_hn, true_cpu_hw, watt = np.load('true.npy')
+
 
 
 
@@ -21,49 +20,61 @@ true_cpu_hn, true_cpu_hw, watt = np.load('true.npy')
 
 #---part 2---#
 #x = np.load('cpu_vis.npy')
-#y = np.load('cpu_hw.npy')S
+#y = np.load('cpu_hw.npy')
 
 #---part 1---#
+x = np.load('cpu_pack_concat.npy')
+y = np.load('cpu_hn_concat.npy')
+
+#---validating---#
+#cpu_pack, cpu_vps, mem_hw = np.load('predict_paramaters.npy')
+#true_cpu_hn, true_cpu_hw, watt = np.load('true.npy')
 #x = cpu_pack
 #y = true_cpu_hn
 
 #--- Linear Regression on Train and mean squared error on Test ---#
-#A = np.vstack([x, np.ones(len(x[0]))]).T
+A = np.vstack([x, np.ones(len(x))]).T
 #t = x[1].T             #--part 3
-#y = y.T
-#print x.shape, A.shape
-#percentTT = 0.2*y.size
-#indices = np.random.permutation(A.shape[0])
-#training_id, test_id = indices[percentTT:], indices[:percentTT] #750
-#
-#trainingx, testx = A[training_id,:], A[test_id,:]
-#trainingy, testy = y[training_id], y[test_id]
+y = y.T
+print x.shape, A.shape
+percentTT = 0.2*y.size
+indices = np.random.permutation(A.shape[0])
+training_id, test_id = indices[percentTT:], indices[:percentTT] #750
+
+trainingx, testx = A[training_id,:], A[test_id,:]
+trainingy, testy = y[training_id], y[test_id]
 #trainingt, testt = t[training_id], t[test_id]  #--part 3
-##print "training id x = ", training_id.shape, "test id x = ", test_id.shape
-#
-#weights = np.linalg.lstsq(trainingx, trainingy)[0]
-#weights = weights.reshape(-1,1)
-#print "Coefficient \t= %.2f \nConstant \t= %.2f"%(weights[0], weights[1])
-#print weights
-#y_pred = np.dot(testx, weights)
-##print trainingx.shape
-#mean = mean_squared_error(testy, y_pred, multioutput='raw_values')
-#
-#print "mean squared error comparison plot = ", float(mean)
+#print "training id x = ", training_id.shape, "test id x = ", test_id.shape
+
+weights = np.linalg.lstsq(trainingx, trainingy)[0]
+weights = weights.reshape(-1,1)
+print "Coefficient \t= %.2f \nConstant \t= %.2f"%(weights[0], weights[1])
+print weights
+y_pred = np.dot(testx, weights)
+#print trainingx.shape
+meanTest = mean_squared_error(testy, y_pred, multioutput='raw_values')
+print "mean squared error comparison plot = ", float(meanTest)
+print testy.shape, trainingy.shape
+meanTrain = mean_squared_error(trainingy, y_pred, multioutput='raw_values')
+print "mean squared error comparison plot = ", float(meanTrain)
 
 
 #--- Making plot out of train data ---#
 
 
-#trainx = trainingx.T[0].reshape(-1, 1)
+trainx = trainingx.T[0].reshape(-1, 1)
 #traint = trainingt.T[0].reshape(-1, 1)  #--part 3
-#trainy = trainingy
-#
-#regr = linear_model.LinearRegression()
-#regr.fit(trainx, trainy)
-#print trainx.shape, trainy.shape
-#plt.scatter(trainx, trainy, c=trainingt, cmap = 'bwr')
-#plt.plot(trainx, regr.predict(trainx), color='red', linewidth=3)
+trainy = trainingy
+
+regr = linear_model.LinearRegression()
+regr.fit(trainx, trainy)
+print trainx.shape, trainy.shape
+plt.scatter(trainx, trainy)
+#plt.scatter(trainx, trainy, c=trainingt, cmap = 'bwr') #--part 3
+plt.plot(trainx, regr.predict(trainx), linewidth=3, color="red")
+
+#print trainingx.shape
+meanTest = mean_squared_error(testy, y_pred, multioutput='raw_values')
 
 
 ##---part 3---#
@@ -125,18 +136,13 @@ true_cpu_hn, true_cpu_hw, watt = np.load('true.npy')
 
 #
 ##---Validating final formula---#
-cpu_hn = 0.96935176 * cpu_pack +  0.05486263 * 48
-cpu_hw = 2.81565561 *(cpu_hn + cpu_vps) + 219.80571215
-predict_power = 0.31789973 * cpu_hw + 3.30112601 * mem_hw + 87.34456914 * 12
+#cpu_hn = 0.96935176 * cpu_pack +  0.05486263 * 48
+#cpu_hw = 2.81565561 *(cpu_hn + cpu_vps) + 219.80571215
+#predict_power = 0.31789973 * cpu_hw + 3.30112601 * mem_hw + 87.34456914 * 12
 
 
-
-
-##
-#
-#
-mean = mean_squared_error(watt, predict_power, multioutput='raw_values')
-print "mean squared error pack to power = ", float(mean)
+#mean = mean_squared_error(watt, predict_power, multioutput='raw_values')
+#print "mean squared error pack to power = ", float(mean)
 
 
 
@@ -156,10 +162,10 @@ print "mean squared error pack to power = ", float(mean)
 #plt.grid()
 #
 #plt.subplot(223)
-plt.scatter(predict_power, watt)
-plt.xlabel('Predicted Power (W)')
-plt.ylabel('Measured Power (W)')
-plt.axis('equal')
+#plt.scatter(predict_power, watt)
+#plt.xlabel('Predicted Power (W)')
+#plt.ylabel('Measured Power (W)')
+#plt.axis('equal')
 #plt.title('power part 3')
 plt.grid()
 ###
